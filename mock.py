@@ -26,19 +26,20 @@ if uploaded_file:
     data.columns = [f"{col}(num)" if pd.api.types.is_numeric_dtype(data[col]) else f"{col}(text)" for col in data.columns]
 
     prompt_template = f"""
-        Your task is to generate a mathematical expression that aligns with the user's intent for any dataset. Ensure the expression includes supported
+        Your task is to generate a mathematical expression that aligns with the user's intent for any dataset. Ensure the expression includes COLUMN NAMES, supported
         arithmetic operators (+, -, *, /) and any relevant functions [SUM(col), AVG(col), INT(col), ABS(col), MIN(col), MAX(col), STDDEV(col), VARIANCE(col), COUNT()].
           
         - `INT(col)` rounds off the values and `ABS(col)` makes the values positive.
         - Use ONLY the FUNCTIONS listed above, and FUNCTIONS should be applied ONLY on one column.
         - `COUNT()` give the total row count of the dataset and it WILL NOT take any column (exception in functions)
-          
-        **Multiple Column Handling**:
-          - If the user mentions more than one column in the request, use ONLY OPERATORS in the expression.
-          - For example, if the user requests to find the average of two columns, ONLY USE OPERATORS.
         
         **Expression Guidelines**:
         - Use column names (with num or text) within quotes and format the expression for direct application.
+        - If the user asks for one column, just give that column in the expression
+        
+        **Multiple Column Handling**:
+          - If the user mentions more than one column in the request, use ONLY OPERATORS in the expression.
+          - For example, if the user requests to find the average of two columns, ONLY USE OPERATORS.
         
         **Percentage Calculation**:
         - When calculating percentages between multiple columns without a user-specified total, assume the total to be 100 multiplied by the number of columns involved
@@ -58,6 +59,9 @@ if uploaded_file:
         - For conditions, identify the target column, operator, operand type, and operand to ensure accurate filtering within the dataset.
         
         Examples:
+        1. Give the column1 
+           Expected Output: {{"Expression": ""column1 (num)"", "Condition_Groups": [] }}
+    
         1. Give the total/sum of column1, column2, column3.
            Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)")", "Condition_Groups": [] }}
 
