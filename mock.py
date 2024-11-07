@@ -12,7 +12,7 @@ client = OpenAI(
     api_key=api_key)
 
 # Streamlit app setup
-st.title("Math Expression Generator")
+st.title("Math Expression & Condition Generator")
 
 # Step 1: File Upload
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -26,16 +26,17 @@ if uploaded_file:
     data.columns = [f"{col}(num)" if pd.api.types.is_numeric_dtype(data[col]) else f"{col}(text)" for col in data.columns]
 
     prompt_template = f"""
-        Your task is to generate a mathematical expression that aligns with the user's intent for any dataset. Ensure the expression includes COLUMN NAMES, supported
-        arithmetic operators (+, -, *, /) and any relevant functions [SUM(col), AVG(col), INT(col), ABS(col), MIN(col), MAX(col), STDDEV(col), VARIANCE(col), COUNT()].
+        Your task is to generate a mathematical expression that aligns with the user's intent for any dataset. Ensure the expression includes
+        supported arithmetic operators (+, -, *, /) and any relevant functions [SUM(col), AVG(col), INT(col), ABS(col), MIN(col), MAX(col), STDDEV(col), VARIANCE(col), COUNT()].
+        
+        **Expression Guidelines**:
+        - All the column names should be with (num) or (text) within quotes. Eg. "column1 (num)" or "column2 (text)"
+        - If the user asks for one column, just give that column in the expression
           
         - `INT(col)` rounds off the values and `ABS(col)` makes the values positive.
         - Use ONLY the FUNCTIONS listed above, and FUNCTIONS should be applied ONLY on one column.
         - `COUNT()` give the total row count of the dataset and it WILL NOT take any column (exception in functions)
-        
-        **Expression Guidelines**:
-        - Use column names (with num or text) within quotes and format the expression for direct application.
-        - If the user asks for one column, just give that column in the expression
+        - mean and average should be interpreted in the same way
         
         **Multiple Column Handling**:
           - If the user mentions more than one column in the request, use ONLY OPERATORS in the expression.
