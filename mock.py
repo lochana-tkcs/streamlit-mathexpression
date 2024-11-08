@@ -313,7 +313,7 @@ if uploaded_file:
             else:
                 # Display the expression if no warnings are present
                 st.write("### Generated Expression")
-                st.text(output_dict["Expression"])
+                st.text(output_dict["Expression"].replace("'", '"'))
 
                 # Display conditions if any
                 if output_dict.get("Condition_Groups"):
