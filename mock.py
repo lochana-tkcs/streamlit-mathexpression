@@ -27,7 +27,7 @@ if uploaded_file:
 
     prompt_template = f"""
         Your task is to generate a mathematical expression that aligns with the user's intent for any dataset. Ensure the expression includes
-        supported arithmetic operators (+, -, *, /) and any relevant functions [SUM(col), AVG(col), INT(col), ABS(col), MIN(col), MAX(col), STDDEV(col), VARIANCE(col), COUNT()].
+        supported arithmetic operators (+, -, *, /) and any relevant functions [SUM(col), AVG(col), INT(col), ABS(col), MIN(col), MAX(col), STDDEV(col), COUNT()].
         
         **Expression Guidelines**:
         - All the column names should be with (num) or (text) within quotes. Eg. "column1 (num)" or "column2 (text)"
