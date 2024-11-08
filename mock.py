@@ -39,9 +39,24 @@ if uploaded_file:
                       {{"Column_Name": "column3 (num)", "Column_Operator": "contains", "Operand_Type": "Value", "Operand": [1]}}
                   ]
               }}
-        - If the user asks for average of different columns ( mean and average should give the same output):
+        - If the user asks for average of different columns (mean and average are same):
             Eg: Give the average/mean of column1, column2, column3.
                Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)") / 3", "Condition_Groups": [] }}
+               
+        - If the user asks the total/sum of different columns with different conditions:
+            Eg. Give the total/sum of column1, column2, column3 where column4 < 10 and column5 has 'test'
+               Expected Output: {{
+                  "Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)")",
+                  "Condition_Groups": [
+                      {{
+                          "Group_Operator": "and",
+                          "Conditions": [
+                              {{"Column_Name": "column4 (num)", "Column_Operator": "is less than", "Operand_Type": "Value", "Operand": [10]}},
+                              {{"Column_Name": "column5 (text)", "Column_Operator": "is one of", "Operand_Type": "Value", "Operand": ["test"]}}
+                          ]
+                      }}
+                  ]
+              }}
           
         - `INT(col)` rounds off the values and `ABS(col)` makes the values positive.
         - Use ONLY the FUNCTIONS listed above, and FUNCTIONS should be applied ONLY on one column.
@@ -71,11 +86,8 @@ if uploaded_file:
         Examples:
         1. Give the column1 
            Expected Output: {{"Expression": ""column1 (num)"", "Condition_Groups": [] }}
-    
-        2. Give the total/sum of column1, column2, column3.
-           Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)")", "Condition_Groups": [] }}
            
-        3. Give the percentage of column1
+        2. Give the percentage of column1
             Expected Output: {{"Expression": ""column1 (num)"/ 100 * 100", "Condition_Groups": [] }}
            
         3. Assuming the total (column1, column2, column3) is 500, give the percentage of those columns
@@ -136,7 +148,7 @@ if uploaded_file:
 
     # Step 2: Prompt Input
     user_prompt = st.text_area(
-        "Enter your prompt (e.g., Give me sum of 'column1' and 'column2' where 'column3' is 'pass'):")
+        "Enter your prompt (e.g., Give me average of 'Maths' column where 'result' column is 'pass'):")
     full_prompt = f"""
         {prompt_template}
 
