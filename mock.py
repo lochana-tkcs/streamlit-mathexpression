@@ -12,7 +12,7 @@ client = OpenAI(
     api_key=api_key)
 
 # Streamlit app setup
-st.title("Math Expression & Condition Generator")
+st.title("Math Expression Generator")
 
 # Step 1: File Upload
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
@@ -31,12 +31,19 @@ if uploaded_file:
         
         **Expression Guidelines**:
         - All the column names should be with (num) or (text) within quotes. Eg. "column1 (num)" or "column2 (text)"
-        - If the user asks for one column, just give that column in the expression
+        - mean and average should be interpreted in the same way and should give the sam output
+        - If the user asks for one column, just give that column in the expression. And conditions can be applied on that one column
+            Eg: Give the column1 where column3 contains 1
+               Expected Output: {{
+                  "Expression": ""column1 (num)"",
+                  "Condition_Groups": [
+                      {{"Column_Name": "column3 (num)", "Column_Operator": "contains", "Operand_Type": "Value", "Operand": [1]}}
+                  ]
+              }}
           
         - `INT(col)` rounds off the values and `ABS(col)` makes the values positive.
         - Use ONLY the FUNCTIONS listed above, and FUNCTIONS should be applied ONLY on one column.
         - `COUNT()` give the total row count of the dataset and it WILL NOT take any column (exception in functions)
-        - mean and average should be interpreted in the same way
         
         **Multiple Column Handling**:
           - If the user mentions more than one column in the request, use ONLY OPERATORS in the expression.
@@ -44,7 +51,7 @@ if uploaded_file:
         
         **Percentage Calculation**:
         - When calculating percentages between multiple columns without a user-specified total, assume the total to be 100 multiplied by the number of columns involved
-        - Eg: For finding the percentage of values across ColumnA and ColumnB without a total provided: ("ColumnA" + "ColumnB" / (100 * 2)) * 100
+        - Eg: For finding the percentage of values across ColumnA and ColumnB without a total provided (Remember to multiply by 100): ("ColumnA" + "ColumnB" / (100 * 2)) * 100
         
         **Percentage Calculation**:
         - The conditional operator (such as "and" or "or") is applied between two columns rather than within a single column.
@@ -66,7 +73,7 @@ if uploaded_file:
         1. Give the total/sum of column1, column2, column3.
            Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)")", "Condition_Groups": [] }}
 
-        2. Give the average or mean of column1, column2, column3.
+        2. Give the average/mean of column1, column2, column3.
            Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)") / 3", "Condition_Groups": [] }}
            
         3. Give the percentage of column1
@@ -107,7 +114,7 @@ if uploaded_file:
                       "Group_Operator": "and",
                       "Conditions": [
                           {{"Column_Name": "column2 (num)", "Column_Operator": "is greater than", "Operand_Type": "Value", "Operand": [50]}},
-                          {{"Column_Name": "column3 (num)", "Column_Operator": "contains", "Operand_Type": "Value", "Operand": ["pass"]}}
+                          {{"Column_Name": "column3 (text)", "Column_Operator": "contains", "Operand_Type": "Value", "Operand": ["pass"]}}
                       ]
                   }}
               ]
@@ -120,7 +127,7 @@ if uploaded_file:
                   {{
                       "Group_Operator": "and",
                       "Conditions": [
-                          {{"Column_Name": "column2 (num)", "Column_Operator": "is one of", "Operand_Type": "Value", "Operand": ["pass", "fail"]}},
+                          {{"Column_Name": "column2 (text)", "Column_Operator": "is one of", "Operand_Type": "Value", "Operand": ["pass", "fail"]}},
                           {{"Column_Name": "column3 (num)", "Column_Operator": "in between", "Operand_Type": "Value", "Operand": [20, 90]}}
                       ]
                   }}
@@ -172,6 +179,7 @@ if uploaded_file:
                         "Column_Operator": {
                           "type": "string",
                           "enum": [
+                            "is",
                             "is one of",
                             "is NOT",
                             "is NOT one of",
@@ -191,7 +199,11 @@ if uploaded_file:
                             "starts with",
                             "ends with",
                             "does NOT start with",
-                            "does NOT end with"
+                            "does NOT end with",
+                            "is earlier than",
+                            "is on or earlier than",
+                            "is later than",
+                            "is on or later than"
                           ]
                         },
                         "Operand_Type": {
