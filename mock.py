@@ -31,7 +31,6 @@ if uploaded_file:
         
         **Expression Guidelines**:
         - All the column names should be with (num) or (text) within quotes. Eg. "column1 (num)" or "column2 (text)"
-        - mean and average should be interpreted in the same way and should give the sam output
         - If the user asks for one column, just give that column in the expression. And conditions can be applied on that one column
             Eg: Give the column1 where column3 contains 1
                Expected Output: {{
@@ -40,6 +39,9 @@ if uploaded_file:
                       {{"Column_Name": "column3 (num)", "Column_Operator": "contains", "Operand_Type": "Value", "Operand": [1]}}
                   ]
               }}
+        - If the user asks for average of different columns ( mean and average should give the same output):
+            Eg: Give the average/mean of column1, column2, column3.
+               Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)") / 3", "Condition_Groups": [] }}
           
         - `INT(col)` rounds off the values and `ABS(col)` makes the values positive.
         - Use ONLY the FUNCTIONS listed above, and FUNCTIONS should be applied ONLY on one column.
@@ -70,11 +72,8 @@ if uploaded_file:
         1. Give the column1 
            Expected Output: {{"Expression": ""column1 (num)"", "Condition_Groups": [] }}
     
-        1. Give the total/sum of column1, column2, column3.
+        2. Give the total/sum of column1, column2, column3.
            Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)")", "Condition_Groups": [] }}
-
-        2. Give the average/mean of column1, column2, column3.
-           Expected Output: {{"Expression": "("column1 (num)" + "column2 (num)" + "column3 (num)") / 3", "Condition_Groups": [] }}
            
         3. Give the percentage of column1
             Expected Output: {{"Expression": ""column1 (num)"/ 100 * 100", "Condition_Groups": [] }}
