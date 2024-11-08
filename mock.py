@@ -75,9 +75,9 @@ if uploaded_file:
         
         **Warnings**:
         - If the prompt requests applying a function (like max, int, abs, min, stddev, variance, count) across multiple columns, include a message:
-          "Warning: Functions cannot be applied across multiple columns."
+          "Warning: The warning appeared either because there is no in-built function for the above request or you tried applying functions across multiple columns. Please check the documentation"
         - If the user makes an invalid or nonsensical request, respond with:
-          "I don't understand. Please change your request."
+          "I don't understand. Please look at the documentation or change your request."
         
         **Conditions**:
         - Include any specified conditions in the output.
@@ -295,8 +295,8 @@ if uploaded_file:
 
             # Check if the expression contains any warnings
             warning_messages = [
-                "Warning: Functions cannot be applied across multiple columns",
-                "I don't understand. Please change your request"
+                "Warning: The warning appeared either because there is no in-built function for the above request or you tried applying functions across multiple columns. Please check the documentation",
+                "I don't understand. Please look at the documentation or change your request"
             ]
 
             # Display warnings if they exist and skip the expression display
